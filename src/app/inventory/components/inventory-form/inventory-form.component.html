@@ -1,0 +1,78 @@
+<mat-card class="mat-elevation-z4">
+  <form action="#">
+    <mat-card-content fxLayout="row wrap"
+                      fxLayoutGap="8px grid"
+                      fxFlexFill>
+
+      <mat-form-field appearance="fill"
+                      fxFlex="10"
+                      fxFlex.lt-md="20"
+                      fxFlex.lt-sm="30"
+                      [hideRequiredMarker]="true"
+                      class="inventory-form-field">
+        <mat-label>Type</mat-label>
+        <mat-select required
+                    id="type-input"
+                    [formControl]="type"
+                    (selectionChange)="handleTypeSelection()">
+          <mat-option *ngFor="let option of AVAILABLE_TYPES"
+                      [value]="option">
+            {{option}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill"
+                      fxFlex="15"
+                      fxFlex.lt-md="25"
+                      fxFlex.lt-sm="70"
+                      [hideRequiredMarker]="true"
+                      class="no-right-padding-sm--enforced">
+        <mat-label>Name</mat-label>
+        <input matInput required
+               id="name-input"
+               [formControl]="name">
+      </mat-form-field>
+
+      <mat-form-field appearance="fill"
+                      fxFlex="10"
+                      fxFlex.lt-md="20"
+                      fxFlex.lt-sm="30"
+                      [hideRequiredMarker]="true">
+        <mat-label>Amount</mat-label>
+        <input matInput required
+               id="amount-input"
+               [formControl]="amount">
+      </mat-form-field>
+
+      <mat-form-field appearance="fill"
+                      fxFlex="10"
+                      fxFlex.lt-md="15"
+                      fxFlex.lt-sm="40"
+                      [hideRequiredMarker]="true">
+        <mat-label>Unit</mat-label>
+        <mat-select required
+                    [formControl]="unit"
+                    (selectionChange)="handleUnitSelection()">
+          <mat-option *ngFor="let option of AVAILABLE_UNITS"
+                      [value]="option">
+            {{option}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <button mat-raised-button
+              #addButton
+              type="submit"
+              color="primary"
+              fxFlex="10"
+              fxFlex.lt-md="10"
+              fxFlex.lt-sm="30"
+              (click)="handleAdd()">
+        Add
+      </button>
+
+    </mat-card-content>
+  </form>
+
+</mat-card>

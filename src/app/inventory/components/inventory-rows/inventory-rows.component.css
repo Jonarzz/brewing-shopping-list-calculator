@@ -1,0 +1,17 @@
+@import '../inventory.component.css';
+
+table {
+  width: 100%;
+}
+
+.mat-column-name {
+  width: 70%;
+}
+
+.mat-column-amount {
+  width: 30%;
+}
+
+.inventory-row {
+  padding: 8px 16px;
+}

@@ -1,0 +1,10 @@
+html, body, app-root, .app-frame {
+  overflow: hidden;
+  margin: 0;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.mat-tab-group {
+  margin: 2%;
+}

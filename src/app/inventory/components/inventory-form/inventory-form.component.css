@@ -1,0 +1,18 @@
+@import '../inventory.component.css';
+
+.mat-form-field {
+  margin-bottom: -1.25em;
+}
+
+button {
+  /* height aligned with input fields height */
+  height: 54px;
+  line-height: 54px;
+  padding: 0 !important;
+}
+
+@media screen and (max-width: 600px) {
+  .no-right-padding-sm--enforced {
+    padding-right: 0 !important;
+  }
+}
