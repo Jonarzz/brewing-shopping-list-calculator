@@ -1,9 +1,9 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {StoreModule} from '@ngrx/store';
-import {InventoryModule} from '../inventory.module';
 
 import {InventoryComponent} from './inventory.component';
+import {InventoryModule} from './inventory.module';
 
 describe('InventoryComponent', () => {
   let component: InventoryComponent;

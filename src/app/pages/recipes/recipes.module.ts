@@ -1,7 +1,6 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-import {StoreModule} from '@ngrx/store';
-import {RecipesComponent} from './components/recipes.component';
+import {RecipesComponent} from './recipes.component';
 
 @NgModule({
   declarations: [
@@ -11,8 +10,7 @@ import {RecipesComponent} from './components/recipes.component';
     RecipesComponent
   ],
   imports: [
-    CommonModule,
-    StoreModule.forFeature('recipes', {}, {}),
+    CommonModule
   ],
 })
 export class RecipesModule { }

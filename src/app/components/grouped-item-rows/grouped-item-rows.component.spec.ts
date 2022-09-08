@@ -1,13 +1,12 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {StoreModule} from '@ngrx/store';
-import {InventoryModule} from '../../inventory.module';
+import {InventoryModule} from '../../pages/inventory/inventory.module';
+import {GroupedItemRows} from './grouped-item-rows.component';
 
-import {InventoryRowsComponent} from './inventory-rows.component';
-
-describe('InventoryRowsComponent', () => {
-  let component: InventoryRowsComponent;
-  let fixture: ComponentFixture<InventoryRowsComponent>;
+describe('GroupedItemRows', () => {
+  let component: GroupedItemRows;
+  let fixture: ComponentFixture<GroupedItemRows>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -19,7 +18,7 @@ describe('InventoryRowsComponent', () => {
                  })
                  .compileComponents();
 
-    fixture = TestBed.createComponent(InventoryRowsComponent);
+    fixture = TestBed.createComponent(GroupedItemRows);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

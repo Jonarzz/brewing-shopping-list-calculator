@@ -1,5 +1,5 @@
 import {createReducer, on} from '@ngrx/store';
-import {InventoryItem, InventoryItemUnit} from '../Inventory.types';
+import {InventoryItem, InventoryItemUnit} from '../model/Inventory.types';
 import {addToInventory, removeFromInventory} from './inventory.actions';
 
 export const initialState: Record<string, InventoryItem> = {

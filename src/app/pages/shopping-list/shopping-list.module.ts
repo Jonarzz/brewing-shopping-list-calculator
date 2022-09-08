@@ -1,7 +1,7 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {StoreModule} from '@ngrx/store';
-import {ShoppingListComponent} from './components/shopping-list.component';
+import {ShoppingListComponent} from './shopping-list.component';
 
 @NgModule({
   declarations: [

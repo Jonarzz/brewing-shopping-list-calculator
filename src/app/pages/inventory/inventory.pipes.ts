@@ -1,5 +1,5 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {InventoryItem, InventoryItemType} from './Inventory.types';
+import {InventoryItem, InventoryItemType} from '../../model/Inventory.types';
 
 type Input = Record<string, InventoryItem> | null;
 type Output = Partial<Record<InventoryItemType, InventoryItem[]>>;

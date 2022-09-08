@@ -10,18 +10,16 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
-import {StoreModule} from '@ngrx/store';
-import {InventoryFormComponent} from './components/inventory-form/inventory-form.component';
-import {InventoryRowsComponent} from './components/inventory-rows/inventory-rows.component';
-import {InventoryComponent} from './components/inventory.component';
+import {GroupedItemRows} from '../../components/grouped-item-rows/grouped-item-rows.component';
+import {ItemFormComponent} from '../../components/item-form/item-form.component';
+import {InventoryComponent} from './inventory.component';
 import {StoredItemsByTypePipe} from './inventory.pipes';
-import {inventoryReducer} from './store/inventory.reducer';
 
 @NgModule({
   declarations: [
     InventoryComponent,
-    InventoryFormComponent,
-    InventoryRowsComponent,
+    ItemFormComponent,
+    GroupedItemRows,
     StoredItemsByTypePipe
   ],
   exports: [
@@ -29,7 +27,6 @@ import {inventoryReducer} from './store/inventory.reducer';
   ],
   imports: [
     CommonModule,
-    StoreModule.forFeature('inventory', inventoryReducer, {}),
     MatCardModule,
     FlexModule,
     MatDividerModule,

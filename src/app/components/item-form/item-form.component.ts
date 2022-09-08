@@ -2,15 +2,16 @@ import {Component, ViewChild} from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
 import {MatButton} from '@angular/material/button';
 import {Store} from '@ngrx/store';
-import {InventoryItem, InventoryItemType, InventoryItemUnit, unitForType} from '../../Inventory.types';
+import {InventoryItem, InventoryItemType, InventoryItemUnit, unitForType} from '../../model/Inventory.types';
 import {addToInventory} from '../../store/inventory.actions';
+import {INVENTORY_STORE} from '../../store/store';
 
 @Component({
-  selector: 'app-inventory-form',
-  templateUrl: './inventory-form.component.html',
-  styleUrls: ['./inventory-form.component.css'],
+  selector: 'app-item-form',
+  templateUrl: './item-form.component.html',
+  styleUrls: ['./item-form.component.css'],
 })
-export class InventoryFormComponent {
+export class ItemFormComponent {
 
   AVAILABLE_TYPES = Object.values(InventoryItemType);
   AVAILABLE_UNITS = Object.values(InventoryItemUnit);
@@ -25,7 +26,7 @@ export class InventoryFormComponent {
 
   userHasSetUnit = false;
 
-  constructor(private store: Store<{ inventory: any }>) {
+  constructor(private store: Store<{ [INVENTORY_STORE]: any }>) {
   }
 
   handleTypeSelection() {
