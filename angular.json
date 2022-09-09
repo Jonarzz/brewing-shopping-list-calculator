@@ -79,22 +79,49 @@
             "browserTarget": "brewing-shopping-list-calculator:build"
           }
         },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
+        "cypress-run": {
+          "builder": "@cypress/schematic:cypress",
           "options": {
-            "main": "src/test.ts",
-            "polyfills": "src/polyfills.ts",
-            "tsConfig": "tsconfig.spec.json",
-            "karmaConfig": "karma.conf.js",
-            "assets": [
-              "src/favicon.ico",
-              "src/assets"
-            ],
-            "styles": [
-              "./node_modules/@angular/material/prebuilt-themes/purple-green.css",
-              "src/styles.css"
-            ],
-            "scripts": []
+            "devServerTarget": "brewing-shopping-list-calculator:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "brewing-shopping-list-calculator:serve:production"
+            }
+          }
+        },
+        "cypress-open": {
+          "builder": "@cypress/schematic:cypress",
+          "options": {
+            "watch": true,
+            "headless": false
+          }
+        },
+        "ct": {
+          "builder": "@cypress/schematic:cypress",
+          "options": {
+            "devServerTarget": "brewing-shopping-list-calculator:serve",
+            "watch": true,
+            "headless": false,
+            "testingType": "component"
+          },
+          "configurations": {
+            "development": {
+              "devServerTarget": "brewing-shopping-list-calculator:serve:development"
+            }
+          }
+        },
+        "e2e": {
+          "builder": "@cypress/schematic:cypress",
+          "options": {
+            "devServerTarget": "brewing-shopping-list-calculator:serve",
+            "watch": true,
+            "headless": false
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "brewing-shopping-list-calculator:serve:production"
+            }
           }
         }
       }

@@ -9,19 +9,21 @@ export enum InventoryItemUnit {
   KILOGRAM = 'kg',
   GRAM = 'g',
   PACKAGE = 'pkg',
+  ITEMS = 'items',
 }
 
-export const unitForType = (type: InventoryItemType) => {
-  switch (type) {
-    case InventoryItemType.GRAIN:
-      return InventoryItemUnit.KILOGRAM;
-    case InventoryItemType.HOP:
-    case InventoryItemType.MISC:
-      return InventoryItemUnit.GRAM;
-    case InventoryItemType.YEAST:
-      return InventoryItemUnit.PACKAGE;
-  }
+export const availableUnitsForType = {
+  [InventoryItemType.GRAIN]: [InventoryItemUnit.KILOGRAM, InventoryItemUnit.GRAM],
+  [InventoryItemType.HOP]: [InventoryItemUnit.GRAM, InventoryItemUnit.KILOGRAM],
+  [InventoryItemType.MISC]: [InventoryItemUnit.GRAM, InventoryItemUnit.ITEMS],
+  [InventoryItemType.YEAST]: [InventoryItemUnit.PACKAGE]
 };
+
+export const defaultUnitForType = Object.entries(availableUnitsForType)
+                                        .reduce((all, [type, units]) => {
+                                          all[type] = units[0];
+                                          return all;
+                                        }, <Record<string, InventoryItemUnit>>{});
 
 export class InventoryItem {
   type: InventoryItemType;
@@ -36,7 +38,7 @@ export class InventoryItem {
     this.type = type;
     this.name = name;
     this.amount = Math.round(amount * 10) / 10;
-    this.unit = unit || unitForType(type);
+    this.unit = unit || defaultUnitForType[type];
   }
 
   static grain(name: string, amount: number, unit?: InventoryItemUnit) {

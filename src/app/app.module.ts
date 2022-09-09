@@ -2,8 +2,8 @@ import {NgModule} from '@angular/core';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {BrowserModule} from '@angular/platform-browser';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {StoreModule} from '@ngrx/store';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {Store, StoreModule} from '@ngrx/store';
 import {AppComponent} from './app.component';
 import {InventoryModule} from './pages/inventory/inventory.module';
 import {RecipesModule} from './pages/recipes/recipes.module';
@@ -19,7 +19,7 @@ import {STORE} from './store/store';
     RecipesModule,
     ShoppingListModule,
     BrowserModule,
-    NoopAnimationsModule,
+    BrowserAnimationsModule,
     MatTabsModule,
     StoreModule.forRoot(STORE, {}),
     MatTooltipModule,
@@ -28,4 +28,12 @@ import {STORE} from './store/store';
   bootstrap: [AppComponent],
 })
 export class AppModule {
+
+  constructor(store: Store) {
+    // @ts-ignore
+    if (window.Cypress) {
+      // @ts-ignore
+      window.store = store;
+    }
+  }
 }

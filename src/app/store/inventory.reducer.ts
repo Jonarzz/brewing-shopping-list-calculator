@@ -2,13 +2,7 @@ import {createReducer, on} from '@ngrx/store';
 import {InventoryItem, InventoryItemUnit} from '../model/Inventory.types';
 import {addToInventory, removeFromInventory} from './inventory.actions';
 
-export const initialState: Record<string, InventoryItem> = {
-  // TODO pusty poczatkowy stan
-  'Pale Ale': InventoryItem.grain('Pale Ale', 10.5),
-  'Carafa Special III': InventoryItem.grain('Carafa Special III', .7),
-  'Cascade': InventoryItem.hop('Cascade', 250),
-  'US-05': InventoryItem.yeast('US-05', 3)
-};
+export const initialState: Record<string, InventoryItem> = {};
 
 const _recalculateUnits = (amount: number,
                            sourceUnit: InventoryItemUnit,

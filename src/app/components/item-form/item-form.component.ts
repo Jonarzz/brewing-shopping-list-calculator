@@ -2,7 +2,7 @@ import {Component, ViewChild} from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
 import {MatButton} from '@angular/material/button';
 import {Store} from '@ngrx/store';
-import {InventoryItem, InventoryItemType, InventoryItemUnit, unitForType} from '../../model/Inventory.types';
+import {availableUnitsForType, defaultUnitForType, InventoryItem, InventoryItemType, InventoryItemUnit} from '../../model/Inventory.types';
 import {addToInventory} from '../../store/inventory.actions';
 import {INVENTORY_STORE} from '../../store/store';
 
@@ -14,7 +14,8 @@ import {INVENTORY_STORE} from '../../store/store';
 export class ItemFormComponent {
 
   AVAILABLE_TYPES = Object.values(InventoryItemType);
-  AVAILABLE_UNITS = Object.values(InventoryItemUnit);
+
+  availableUnits = Object.values(InventoryItemUnit);
 
   type = new FormControl<InventoryItemType>(<any>null, [Validators.required]);
   name = new FormControl('', [Validators.required]);
@@ -30,9 +31,13 @@ export class ItemFormComponent {
   }
 
   handleTypeSelection() {
-    const {type} = this;
-    if (!this.userHasSetUnit && type.value) {
-      this.unit.setValue(unitForType(type.value));
+    const {type: {value: typeValue}} = this;
+    if (!typeValue) {
+      return;
+    }
+    this.availableUnits = availableUnitsForType[typeValue];
+    if (!this.userHasSetUnit || this.availableUnits.length === 1) {
+      this.unit.setValue(defaultUnitForType[typeValue]);
       this.resetVaryingFields();
     }
   }

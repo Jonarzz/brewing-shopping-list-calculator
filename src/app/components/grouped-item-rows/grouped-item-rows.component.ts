@@ -17,6 +17,7 @@ export class GroupedItemRows {
 
   constructor(private store: Store<{ [INVENTORY_STORE]: any }>) {
     // TODO selector
+    // TODO rest of the tests
     this.inventory$ = store.select(INVENTORY_STORE);
   }
 
