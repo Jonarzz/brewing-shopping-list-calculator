@@ -100,10 +100,9 @@
         "ct": {
           "builder": "@cypress/schematic:cypress",
           "options": {
-            "devServerTarget": "brewing-shopping-list-calculator:serve",
-            "watch": true,
-            "headless": false,
-            "testingType": "component"
+            "testingType": "component",
+            "watch": false,
+            "headless": false
           },
           "configurations": {
             "development": {

@@ -14,10 +14,22 @@ const cyIds = {
   },
 };
 
+// for each on the test case level does not work with Cypress component testing as of now
+// hence for each loops are used in the test cases
 describe('Item form', () => {
 
-  // for each on the test case level does not work with Cypress component testing as of now
-  // hence for each loops are used in the test cases
+  const makeSelection = (cySelectId: string, cyOptionId: string) => cy.get(`[data-cy="${cySelectId}"]`)
+                                                                      .click()
+                                                                      .get(`[data-cy="${cyOptionId}"]`)
+                                                                      .click();
+  const selectType = (type: string) => makeSelection(cyIds.fields.type, `type-option-${type}`);
+  const selectUnit = (unit: string) => makeSelection(cyIds.fields.unit, `unit-option-${unit}`);
+  const fillInput = (cyInputId: string, value: string) => cy.get(`[data-cy="${cyInputId}"]`)
+                                                            .type(value);
+  const clickAddButton = () => {
+    cy.get(`[data-cy="${cyIds.buttons.add}"]`)
+      .click();
+  };
 
   beforeEach(() => {
     cy.mount(ItemFormComponent, {
@@ -45,8 +57,7 @@ describe('Item form', () => {
     it('focuses type field when add button clicked with empty inputs', () => {
       cy.expectNoStoreChanges();
 
-      cy.get(`[data-cy="${cyIds.buttons.add}"]`)
-        .click();
+      clickAddButton();
 
       cy.focused()
         .as('Focused element')
@@ -55,14 +66,10 @@ describe('Item form', () => {
     });
 
     it('focuses name field when add button clicked after type filled in', () => {
-      cy.get(`[data-cy="${cyIds.fields.type}"]`)
-        .click();
-      cy.get('[data-cy="type-option-Grains"]')
-        .click();
+      selectType('Grains');
 
       cy.expectNoStoreChanges();
-      cy.get(`[data-cy="${cyIds.buttons.add}"]`)
-        .click();
+      clickAddButton();
 
       cy.focused()
         .as('Focused element')
@@ -71,16 +78,11 @@ describe('Item form', () => {
     });
 
     it('focuses and resets name field when add button clicked with blank name input', () => {
-      cy.get(`[data-cy="${cyIds.fields.type}"]`)
-        .click();
-      cy.get('[data-cy="type-option-Grains"]')
-        .click();
-      cy.get(`[data-cy="${cyIds.fields.name}"]`)
-        .type('   ');
+      selectType('Grains');
+      fillInput(cyIds.fields.name, '   ');
 
       cy.expectNoStoreChanges();
-      cy.get(`[data-cy="${cyIds.buttons.add}"]`)
-        .click();
+      clickAddButton();
 
       cy.focused()
         .as('Focused element')
@@ -90,16 +92,11 @@ describe('Item form', () => {
     });
 
     it('focuses amount field when add button clicked after type and name filled in', () => {
-      cy.get(`[data-cy="${cyIds.fields.type}"]`)
-        .click();
-      cy.get('[data-cy="type-option-Grains"]')
-        .click();
-      cy.get(`[data-cy="${cyIds.fields.name}"]`)
-        .type('Pale Ale');
+      selectType('Grains');
+      fillInput(cyIds.fields.name, 'Pale Ale');
 
       cy.expectNoStoreChanges();
-      cy.get(`[data-cy="${cyIds.buttons.add}"]`)
-        .click();
+      clickAddButton();
 
       cy.focused()
         .as('Focused element')
@@ -108,18 +105,12 @@ describe('Item form', () => {
     });
 
     it('focuses and resets amount field when add button clicked after type, name and negative amount filled in', () => {
-      cy.get(`[data-cy="${cyIds.fields.type}"]`)
-        .click();
-      cy.get('[data-cy="type-option-Grains"]')
-        .click();
-      cy.get(`[data-cy="${cyIds.fields.name}"]`)
-        .type('Pale Ale');
-      cy.get(`[data-cy="${cyIds.fields.amount}"]`)
-        .type('-1');
+      selectType('Grains');
+      fillInput(cyIds.fields.name, 'Pale Ale');
+      fillInput(cyIds.fields.amount, '-1');
 
       cy.expectNoStoreChanges();
-      cy.get(`[data-cy="${cyIds.buttons.add}"]`)
-        .click();
+      clickAddButton();
 
       cy.focused()
         .as('Focused element')
@@ -130,7 +121,7 @@ describe('Item form', () => {
 
   });
 
-  describe('units and type relation', () => {
+  describe('units and types', () => {
 
     it('changes default unit on type selection', () => {
       for (let [type, expectedUnit] of [
@@ -139,10 +130,7 @@ describe('Item form', () => {
         ['Yeast', 'pkg'],
         ['Misc', 'g'],
       ]) {
-        cy.get(`[data-cy="${cyIds.fields.type}"]`)
-          .click();
-        cy.get(`[data-cy="type-option-${type}"]`)
-          .click();
+        selectType(type);
 
         cy.get(`[data-cy="${cyIds.fields.unit}"] .mat-select-value-text`)
           .should('have.text', expectedUnit);
@@ -155,10 +143,7 @@ describe('Item form', () => {
         ['Hops', ['g', 'kg']],
         ['Misc', ['g', 'items']],
       ]) {
-        cy.get(`[data-cy="${cyIds.fields.type}"]`)
-          .click();
-        cy.get(`[data-cy="type-option-${type}"]`)
-          .click();
+        selectType(<string> type);
 
         cy.get(`[data-cy="${cyIds.fields.unit}"]`)
           .click();
@@ -172,16 +157,47 @@ describe('Item form', () => {
       }
     });
 
-    it('changes and disables unit selection on yeast type selection', () => {
-      cy.get(`[data-cy="${cyIds.fields.type}"]`)
-        .click();
-      cy.get('[data-cy="type-option-Yeast"]')
-        .click();
+    it('changes and disables unit selection on type with single unit selection', () => {
+      for (let [type, unit] of [
+        ['Yeast', 'pkg'],
+      ]) {
+        selectType(type);
 
-      cy.get(`[data-cy="${cyIds.fields.unit}"]`)
-        .should('have.class', 'mat-form-field-disabled')
-        .find('.mat-select-value')
-        .should('have.text', 'pkg');
+        cy.get(`[data-cy="${cyIds.fields.unit}"]`)
+          .should('have.class', 'mat-form-field-disabled')
+          .find('.mat-select-value')
+          .should('have.text', unit);
+      }
+    });
+
+    it('does not change unit to default after manual unit selection and changing type', () => {
+      for (let [verifiedType, nonDefaultUnit, otherType] of [
+        ['Grains', 'g', 'Hops'],
+        ['Hops', 'kg', 'Grains'],
+        ['Misc', 'items', 'Hops']
+      ]) {
+        selectType(verifiedType);
+        selectUnit(nonDefaultUnit);
+        selectType(otherType);
+        selectType(verifiedType);
+
+        cy.get(`[data-cy="${cyIds.fields.unit}"] .mat-select-value`)
+          .should('have.text', nonDefaultUnit);
+      }
+    });
+
+    it('changes unit to default (single) even after manual unit selection', () => {
+      for (let [verifiedType, verifiedTypeUnit, otherType, otherTypeNonDefaultUnit] of [
+        ['Yeast', 'pkg', 'Grains', 'g'],
+      ]) {
+        selectType(otherType);
+        selectUnit(otherTypeNonDefaultUnit);
+
+        selectType(verifiedType);
+
+        cy.get(`[data-cy="${cyIds.fields.unit}"] .mat-select-value`)
+          .should('have.text', verifiedTypeUnit);
+      }
     });
 
   });
@@ -204,27 +220,18 @@ describe('Item form', () => {
 
     const addAndAssert = (inputs: Inputs, expectedItem: Item) => {
       const {type, name, amount, unit} = inputs;
-      cy.get(`[data-cy="${cyIds.fields.type}"]`)
-        .click();
-      cy.get(`[data-cy="type-option-${type}"]`)
-        .click();
-      cy.get(`[data-cy="${cyIds.fields.name}"]`)
-        .type(name);
-      cy.get(`[data-cy="${cyIds.fields.amount}"]`)
-        .type(String(amount));
+      selectType(type);
+      fillInput(cyIds.fields.name, name);
+      fillInput(cyIds.fields.amount, String(amount));
       if (unit) {
-        cy.get(`[data-cy="${cyIds.fields.unit}"]`)
-          .click();
-        cy.get(`[data-cy="unit-option-${unit}"]`)
-          .click();
+        selectUnit(unit);
       }
 
       cy.subscribeForStoreChanges((state: any) => {
         assertThat(state.inventory[name])
           .isEqualTo(expectedItem);
       });
-      cy.get(`[data-cy="${cyIds.buttons.add}"]`)
-        .click();
+      clickAddButton();
 
       cy.focused()
         .as('Focused element')
@@ -302,7 +309,7 @@ describe('Item form', () => {
       );
     });
 
-    it('adds single yeast item', () => {
+    it('adds single yeast item with default unit', () => {
       const type = 'Yeast';
       const name = 'US-05';
       const amount = 2;

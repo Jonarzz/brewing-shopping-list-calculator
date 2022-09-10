@@ -6,7 +6,7 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "CYPRESS_NO_COMMAND_LOG=1 npx cypress run --component --config video=false",
+    "test": "ng run brewing-shopping-list-calculator:ct",
     "e2e": "ng e2e",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run"
