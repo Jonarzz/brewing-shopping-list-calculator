@@ -4,7 +4,6 @@ import {MatButton} from '@angular/material/button';
 import {Store} from '@ngrx/store';
 import {availableUnitsForType, defaultUnitForType, InventoryItem, InventoryItemType, InventoryItemUnit} from '../../model/Inventory.types';
 import {addToInventory} from '../../store/inventory.actions';
-import {INVENTORY_STORE} from '../../store/store';
 
 @Component({
   selector: 'app-item-form',
@@ -27,7 +26,7 @@ export class ItemFormComponent {
 
   userHasSetUnit = false;
 
-  constructor(private store: Store<{ [INVENTORY_STORE]: any }>) {
+  constructor(private store: Store) {
   }
 
   handleTypeSelection() {

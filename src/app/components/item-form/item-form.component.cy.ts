@@ -1,35 +1,11 @@
+import {cyIds} from '../../../../cypress/support/commands';
 import {assertThat} from '../../../../cypress/support/static-commands';
 import {AppModule} from '../../app.module';
 import {ItemFormComponent} from './item-form.component';
 
-const cyIds = {
-  fields: {
-    type: 'type-field',
-    name: 'name-field',
-    amount: 'amount-field',
-    unit: 'unit-field',
-  },
-  buttons: {
-    add: 'add-button',
-  },
-};
-
 // for each on the test case level does not work with Cypress component testing as of now
 // hence for each loops are used in the test cases
 describe('Item form', () => {
-
-  const makeSelection = (cySelectId: string, cyOptionId: string) => cy.get(`[data-cy="${cySelectId}"]`)
-                                                                      .click()
-                                                                      .get(`[data-cy="${cyOptionId}"]`)
-                                                                      .click();
-  const selectType = (type: string) => makeSelection(cyIds.fields.type, `type-option-${type}`);
-  const selectUnit = (unit: string) => makeSelection(cyIds.fields.unit, `unit-option-${unit}`);
-  const fillInput = (cyInputId: string, value: string) => cy.get(`[data-cy="${cyInputId}"]`)
-                                                            .type(value);
-  const clickAddButton = () => {
-    cy.get(`[data-cy="${cyIds.buttons.add}"]`)
-      .click();
-  };
 
   beforeEach(() => {
     cy.mount(ItemFormComponent, {
@@ -57,7 +33,7 @@ describe('Item form', () => {
     it('focuses type field when add button clicked with empty inputs', () => {
       cy.expectNoStoreChanges();
 
-      clickAddButton();
+      cy.clickAddButton();
 
       cy.focused()
         .as('Focused element')
@@ -66,10 +42,10 @@ describe('Item form', () => {
     });
 
     it('focuses name field when add button clicked after type filled in', () => {
-      selectType('Grains');
+      cy.selectType('Grains')
+        .expectNoStoreChanges();
 
-      cy.expectNoStoreChanges();
-      clickAddButton();
+      cy.clickAddButton();
 
       cy.focused()
         .as('Focused element')
@@ -78,11 +54,11 @@ describe('Item form', () => {
     });
 
     it('focuses and resets name field when add button clicked with blank name input', () => {
-      selectType('Grains');
-      fillInput(cyIds.fields.name, '   ');
+      cy.selectType('Grains')
+        .fillNameInput('   ')
+        .expectNoStoreChanges();
 
-      cy.expectNoStoreChanges();
-      clickAddButton();
+      cy.clickAddButton();
 
       cy.focused()
         .as('Focused element')
@@ -92,11 +68,11 @@ describe('Item form', () => {
     });
 
     it('focuses amount field when add button clicked after type and name filled in', () => {
-      selectType('Grains');
-      fillInput(cyIds.fields.name, 'Pale Ale');
+      cy.selectType('Grains')
+        .fillNameInput('Pale Ale')
+        .expectNoStoreChanges();
 
-      cy.expectNoStoreChanges();
-      clickAddButton();
+      cy.clickAddButton();
 
       cy.focused()
         .as('Focused element')
@@ -105,12 +81,12 @@ describe('Item form', () => {
     });
 
     it('focuses and resets amount field when add button clicked after type, name and negative amount filled in', () => {
-      selectType('Grains');
-      fillInput(cyIds.fields.name, 'Pale Ale');
-      fillInput(cyIds.fields.amount, '-1');
+      cy.selectType('Grains')
+        .fillNameInput('Pale Ale')
+        .fillAmountInput(-1)
+        .expectNoStoreChanges();
 
-      cy.expectNoStoreChanges();
-      clickAddButton();
+      cy.clickAddButton();
 
       cy.focused()
         .as('Focused element')
@@ -130,7 +106,7 @@ describe('Item form', () => {
         ['Yeast', 'pkg'],
         ['Misc', 'g'],
       ]) {
-        selectType(type);
+        cy.selectType(type);
 
         cy.get(`[data-cy="${cyIds.fields.unit}"] .mat-select-value-text`)
           .should('have.text', expectedUnit);
@@ -143,7 +119,7 @@ describe('Item form', () => {
         ['Hops', ['g', 'kg']],
         ['Misc', ['g', 'items']],
       ]) {
-        selectType(<string> type);
+        cy.selectType(<string> type);
 
         cy.get(`[data-cy="${cyIds.fields.unit}"]`)
           .click();
@@ -161,7 +137,7 @@ describe('Item form', () => {
       for (let [type, unit] of [
         ['Yeast', 'pkg'],
       ]) {
-        selectType(type);
+        cy.selectType(type);
 
         cy.get(`[data-cy="${cyIds.fields.unit}"]`)
           .should('have.class', 'mat-form-field-disabled')
@@ -176,10 +152,10 @@ describe('Item form', () => {
         ['Hops', 'kg', 'Grains'],
         ['Misc', 'items', 'Hops']
       ]) {
-        selectType(verifiedType);
-        selectUnit(nonDefaultUnit);
-        selectType(otherType);
-        selectType(verifiedType);
+        cy.selectType(verifiedType)
+          .selectUnit(nonDefaultUnit)
+          .selectType(otherType)
+          .selectType(verifiedType);
 
         cy.get(`[data-cy="${cyIds.fields.unit}"] .mat-select-value`)
           .should('have.text', nonDefaultUnit);
@@ -190,10 +166,10 @@ describe('Item form', () => {
       for (let [verifiedType, verifiedTypeUnit, otherType, otherTypeNonDefaultUnit] of [
         ['Yeast', 'pkg', 'Grains', 'g'],
       ]) {
-        selectType(otherType);
-        selectUnit(otherTypeNonDefaultUnit);
+        cy.selectType(otherType)
+          .selectUnit(otherTypeNonDefaultUnit);
 
-        selectType(verifiedType);
+        cy.selectType(verifiedType);
 
         cy.get(`[data-cy="${cyIds.fields.unit}"] .mat-select-value`)
           .should('have.text', verifiedTypeUnit);
@@ -220,18 +196,18 @@ describe('Item form', () => {
 
     const addAndAssert = (inputs: Inputs, expectedItem: Item) => {
       const {type, name, amount, unit} = inputs;
-      selectType(type);
-      fillInput(cyIds.fields.name, name);
-      fillInput(cyIds.fields.amount, String(amount));
+      cy.subscribeForStoreChanges((state: any) => {
+          assertThat(state.inventory[name])
+            .isEqualTo(expectedItem);
+        })
+        .selectType(type)
+        .fillNameInput(name)
+        .fillAmountInput(amount);
       if (unit) {
-        selectUnit(unit);
+        cy.selectUnit(unit);
       }
 
-      cy.subscribeForStoreChanges((state: any) => {
-        assertThat(state.inventory[name])
-          .isEqualTo(expectedItem);
-      });
-      clickAddButton();
+      cy.clickAddButton();
 
       cy.focused()
         .as('Focused element')

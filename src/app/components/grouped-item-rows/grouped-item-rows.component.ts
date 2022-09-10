@@ -3,8 +3,7 @@ import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {InventoryItem} from '../../model/Inventory.types';
 import {removeFromInventory} from '../../store/inventory.actions';
-import {initialState} from '../../store/inventory.reducer';
-import {INVENTORY_STORE} from '../../store/store';
+import {inventoryItemsByType, ItemsByType} from '../../store/store';
 
 @Component({
   selector: 'app-grouped-item-rows',
@@ -13,12 +12,11 @@ import {INVENTORY_STORE} from '../../store/store';
 })
 export class GroupedItemRows {
 
-  inventory$: Observable<typeof initialState>;
+  itemsByType$: Observable<ItemsByType>;
 
-  constructor(private store: Store<{ [INVENTORY_STORE]: any }>) {
-    // TODO selector
-    // TODO rest of the tests
-    this.inventory$ = store.select(INVENTORY_STORE);
+  constructor(private store: Store) {
+    this.itemsByType$ = store.select(inventoryItemsByType);
+    this.itemsByType$.subscribe(e => console.log(e));
   }
 
   handleRemove(item: InventoryItem) {

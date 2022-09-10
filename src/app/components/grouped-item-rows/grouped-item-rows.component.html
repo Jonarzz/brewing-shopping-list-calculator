@@ -1,24 +1,26 @@
-<mat-card *ngFor="let element of (inventory$ | async | storedItemsByType | keyvalue)"
-          class="mat-elevation-z4">
-  <mat-card-title>{{element.key}}</mat-card-title>
-  <mat-card-content>
-    <div *ngFor="let item of element.value">
-      <mat-divider></mat-divider>
-      <div class="inventory-row" fxLayout="row" fxLayoutAlign="start center">
-        <div fxFlex="20"
-             fxFlex.lt-md="60">
-          {{item.name}}
+<ng-container *ngIf="itemsByType$ | async as itemsByType">
+  <mat-card *ngFor="let element of (itemsByType | keyvalue)"
+            class="mat-elevation-z4"
+            [attr.data-cy]="'items-card-' + element.key">
+    <mat-card-title>{{element.key}}</mat-card-title>
+    <mat-card-content>
+      <div *ngFor="let item of element.value">
+        <mat-divider></mat-divider>
+        <div class="inventory-row" fxLayout="row" fxLayoutAlign="start center">
+          <div fxFlex="20"
+               fxFlex.lt-md="60"
+          >{{item.name}}</div>
+          <div fxFlex="10"
+               fxFlex.lt-md="30"
+          >{{item.amount}} {{item.unit}}</div>
+          <button mat-icon-button
+                  fxFlex.lt-md="10"
+                  (click)="handleRemove(item)"
+                  [attr.data-cy]="'delete-' + item.name">
+            <mat-icon>delete</mat-icon>
+          </button>
         </div>
-        <div fxFlex="10"
-             fxFlex.lt-md="30">
-          {{item.amount}} {{item.unit}}
-        </div>
-        <button mat-icon-button
-                fxFlex.lt-md="10"
-                (click)="handleRemove(item)">
-          <mat-icon>delete</mat-icon>
-        </button>
       </div>
-    </div>
-  </mat-card-content>
-</mat-card>
+    </mat-card-content>
+  </mat-card>
+</ng-container>

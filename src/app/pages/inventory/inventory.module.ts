@@ -13,14 +13,12 @@ import {MatSelectModule} from '@angular/material/select';
 import {GroupedItemRows} from '../../components/grouped-item-rows/grouped-item-rows.component';
 import {ItemFormComponent} from '../../components/item-form/item-form.component';
 import {InventoryComponent} from './inventory.component';
-import {StoredItemsByTypePipe} from './inventory.pipes';
 
 @NgModule({
   declarations: [
     InventoryComponent,
     ItemFormComponent,
     GroupedItemRows,
-    StoredItemsByTypePipe
   ],
   exports: [
     InventoryComponent

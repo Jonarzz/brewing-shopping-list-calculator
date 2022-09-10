@@ -1,6 +1,6 @@
 export enum InventoryItemType {
-  GRAIN = 'Grains',
-  HOP = 'Hops',
+  GRAINS = 'Grains',
+  HOPS = 'Hops',
   YEAST = 'Yeast',
   MISC = 'Misc'
 }
@@ -13,8 +13,8 @@ export enum InventoryItemUnit {
 }
 
 export const availableUnitsForType = {
-  [InventoryItemType.GRAIN]: [InventoryItemUnit.KILOGRAM, InventoryItemUnit.GRAM],
-  [InventoryItemType.HOP]: [InventoryItemUnit.GRAM, InventoryItemUnit.KILOGRAM],
+  [InventoryItemType.GRAINS]: [InventoryItemUnit.KILOGRAM, InventoryItemUnit.GRAM],
+  [InventoryItemType.HOPS]: [InventoryItemUnit.GRAM, InventoryItemUnit.KILOGRAM],
   [InventoryItemType.MISC]: [InventoryItemUnit.GRAM, InventoryItemUnit.ITEMS],
   [InventoryItemType.YEAST]: [InventoryItemUnit.PACKAGE]
 };
@@ -42,11 +42,11 @@ export class InventoryItem {
   }
 
   static grain(name: string, amount: number, unit?: InventoryItemUnit) {
-    return new InventoryItem(InventoryItemType.GRAIN, name, amount, unit);
+    return new InventoryItem(InventoryItemType.GRAINS, name, amount, unit);
   }
 
   static hop(name: string, amount: number, unit?: InventoryItemUnit) {
-    return new InventoryItem(InventoryItemType.HOP, name, amount, unit);
+    return new InventoryItem(InventoryItemType.HOPS, name, amount, unit);
   }
 
   static yeast(name: string, amount: number, unit?: InventoryItemUnit) {
