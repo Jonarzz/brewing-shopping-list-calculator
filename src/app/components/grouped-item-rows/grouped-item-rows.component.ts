@@ -1,6 +1,5 @@
 import {Component} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {Observable} from 'rxjs';
 import {InventoryItem} from '../../model/Inventory.types';
 import {removeFromInventory} from '../../store/inventory.actions';
 import {inventoryItemsByType, ItemsByType} from '../../store/store';
@@ -12,11 +11,11 @@ import {inventoryItemsByType, ItemsByType} from '../../store/store';
 })
 export class GroupedItemRows {
 
-  itemsByType$: Observable<ItemsByType>;
+  itemsByType!: ItemsByType;
 
   constructor(private store: Store) {
-    this.itemsByType$ = store.select(inventoryItemsByType);
-    this.itemsByType$.subscribe(e => console.log(e));
+    store.select(inventoryItemsByType)
+         .subscribe(itemsByType => this.itemsByType = itemsByType);
   }
 
   handleRemove(item: InventoryItem) {

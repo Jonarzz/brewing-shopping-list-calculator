@@ -1,6 +1,5 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-import {StoreModule} from '@ngrx/store';
 import {ShoppingListComponent} from './shopping-list.component';
 
 @NgModule({
@@ -12,7 +11,6 @@ import {ShoppingListComponent} from './shopping-list.component';
   ],
   imports: [
     CommonModule,
-    StoreModule.forFeature('shopping-list', {}, {}),
   ],
 })
 export class ShoppingListModule { }
