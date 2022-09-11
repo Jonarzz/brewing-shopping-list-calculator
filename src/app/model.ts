@@ -25,6 +25,25 @@ export const defaultUnitForType = Object.entries(availableUnitsForType)
                                           return all;
                                         }, <Record<string, InventoryItemUnit>>{});
 
+const _recalculateUnits = (amount: number,
+                           sourceUnit: InventoryItemUnit,
+                           targetUnit: InventoryItemUnit): number => {
+  switch (sourceUnit) {
+    case InventoryItemUnit.GRAM:
+      if (targetUnit === InventoryItemUnit.KILOGRAM) {
+        return amount / 1000;
+      }
+      return amount;
+    case InventoryItemUnit.KILOGRAM:
+      if (targetUnit === InventoryItemUnit.GRAM) {
+        return amount * 1000;
+      }
+      return amount;
+    default:
+      throw `Unit ${sourceUnit} cannot be recalculated to ${targetUnit}`;
+  }
+};
+
 export class InventoryItem {
   type: InventoryItemType;
   name: string;
@@ -52,4 +71,11 @@ export class InventoryItem {
   static yeast(name: string, amount: number, unit?: InventoryItemUnit) {
     return new InventoryItem(InventoryItemType.YEAST, name, amount, unit);
   }
+
+  mergedWith = (other: InventoryItem) => {
+    const recalculated = _recalculateUnits(other.amount, other.unit, this.unit);
+    // gotta love JS
+    const sum = (+this.amount) + (+recalculated);
+    return new InventoryItem(this.type, this.name, sum, this.unit);
+  };
 }

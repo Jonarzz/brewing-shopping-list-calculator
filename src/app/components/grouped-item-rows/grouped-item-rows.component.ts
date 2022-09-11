@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {InventoryItem} from '../../model/Inventory.types';
+import {InventoryItem} from '../../model';
 import {ItemsByType} from '../../store/store';
 
 @Component({

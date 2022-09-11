@@ -1,4 +1,4 @@
-import {InventoryItem} from '../../model/Inventory.types';
+import {InventoryItem} from '../../model';
 import {InventoryModule} from '../../pages/inventory/inventory.module';
 import {ItemsByType} from '../../store/store';
 import {GroupedItemRows} from './grouped-item-rows.component';

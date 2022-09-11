@@ -1,1 +1,39 @@
-<p>recipes works!</p>
+<mat-card class="mat-elevation-z4"
+          data-cy="form-card">
+  <mat-card-content fxLayout="row wrap"
+                    fxLayoutGap="8px grid"
+                    fxFlexFill>
+
+    <mat-form-field appearance="fill"
+                    fxFlex="30"
+                    fxFlex.lt-md="70"
+                    [hideRequiredMarker]="true"
+                    data-cy="name-field">
+      <mat-label>Recipe name</mat-label>
+      <input matInput required
+             id="recipe-name-input"
+             [formControl]="recipeName">
+    </mat-form-field>
+
+    <button mat-raised-button
+            color="primary"
+            fxFlex="10"
+            fxFlex.lt-md="30"
+            (click)="addRecipe()"
+            data-cy="add-button"
+    >Add</button>
+
+  </mat-card-content>
+</mat-card>
+
+<mat-expansion-panel *ngFor="let recipe of recipes | keyvalue"
+                     [attr.data-cy]="'recipe-card-' + recipe.key">
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      {{recipe.key}}
+    </mat-panel-title>
+  </mat-expansion-panel-header>
+  <app-item-form (addItem)="addRecipeItem(recipe.key, $event)"></app-item-form>
+  <app-grouped-item-rows [itemsByType]="recipe.value"
+                         (removeItem)="removeRecipeItem(recipe.key, $event)"></app-grouped-item-rows>
+</mat-expansion-panel>

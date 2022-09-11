@@ -1,5 +1,5 @@
 import {createAction, props} from '@ngrx/store';
-import {InventoryItem} from '../model/Inventory.types';
+import {InventoryItem} from '../model';
 
 export enum InventoryActionType {
   ADD = '[Inventory] Add',

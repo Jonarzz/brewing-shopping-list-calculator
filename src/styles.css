@@ -10,3 +10,14 @@ body {
 .mat-card {
   margin: 8px 0;
 }
+
+.mat-form-field {
+  margin-bottom: -1.25em;
+}
+
+button {
+  /* height aligned with input fields height */
+  height: 54px;
+  line-height: 54px;
+  padding: 0 !important;
+}

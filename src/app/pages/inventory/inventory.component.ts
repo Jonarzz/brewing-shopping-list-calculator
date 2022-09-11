@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {InventoryItem} from '../../model/Inventory.types';
+import {InventoryItem} from '../../model';
 import {addToInventory, removeFromInventory} from '../../store/inventory.actions';
 import {inventoryItemsByType, ItemsByType} from '../../store/store';
 
@@ -13,13 +13,11 @@ export class InventoryComponent {
 
   itemsByType!: ItemsByType;
 
-  addItem: (item: InventoryItem) => void;
-  removeItem: (item: InventoryItem) => void;
-
-  constructor(store: Store) {
+  constructor(private store: Store) {
     store.select(inventoryItemsByType)
          .subscribe(itemsByType => this.itemsByType = itemsByType);
-    this.addItem = item => store.dispatch(addToInventory({item}));
-    this.removeItem = item => store.dispatch(removeFromInventory({item}));
   }
+
+  addItem = (item: InventoryItem) => this.store.dispatch(addToInventory({item}));
+  removeItem = (item: InventoryItem) => this.store.dispatch(removeFromInventory({item}));
 }

@@ -1,7 +1,7 @@
 import {Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
 import {MatButton} from '@angular/material/button';
-import {availableUnitsForType, defaultUnitForType, InventoryItem, InventoryItemType, InventoryItemUnit} from '../../model/Inventory.types';
+import {availableUnitsForType, defaultUnitForType, InventoryItem, InventoryItemType, InventoryItemUnit} from '../../model';
 
 @Component({
   selector: 'app-item-form',
