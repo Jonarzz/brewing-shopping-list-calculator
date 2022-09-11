@@ -1,16 +1,17 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
 import {MatButton} from '@angular/material/button';
-import {Store} from '@ngrx/store';
 import {availableUnitsForType, defaultUnitForType, InventoryItem, InventoryItemType, InventoryItemUnit} from '../../model/Inventory.types';
-import {addToInventory} from '../../store/inventory.actions';
 
 @Component({
   selector: 'app-item-form',
   templateUrl: './item-form.component.html',
   styleUrls: ['./item-form.component.css'],
 })
-export class ItemFormComponent {
+export class ItemFormComponent implements OnInit {
+
+  @Output()
+  private addItem = new EventEmitter<InventoryItem>();
 
   AVAILABLE_TYPES = Object.values(InventoryItemType);
 
@@ -24,9 +25,12 @@ export class ItemFormComponent {
   @ViewChild('addButton')
   addButton!: MatButton;
 
-  userHasSetUnit = false;
+  private unitSetManually = false;
 
-  constructor(private store: Store) {
+  ngOnInit(): void {
+    if (!this.addItem) {
+      throw new Error('"addItem" output is required');
+    }
   }
 
   handleTypeSelection() {
@@ -35,14 +39,14 @@ export class ItemFormComponent {
       return;
     }
     this.availableUnits = availableUnitsForType[typeValue];
-    if (!this.userHasSetUnit || this.availableUnits.length === 1) {
+    if (!this.unitSetManually || this.availableUnits.length === 1) {
       this.unit.setValue(defaultUnitForType[typeValue]);
       this.resetVaryingFields();
     }
   }
 
   handleUnitSelection() {
-    this.userHasSetUnit = true;
+    this.unitSetManually = true;
   }
 
   handleAdd() {
@@ -62,7 +66,7 @@ export class ItemFormComponent {
       return;
     }
     const item = new InventoryItem(type.value, name.value, amount.value, unit.value);
-    this.store.dispatch(addToInventory({item}));
+    this.addItem.emit(item);
     this.addButton.ripple.launch({centered: true});
     this.resetVaryingFields();
   }

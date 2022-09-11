@@ -1,29 +1,3 @@
-function * ignoringFirstCall(callback: Function, count = 0) {
-  while (true) {
-    if (count > 0) {
-      callback();
-    }
-    yield ++count;
-  }
-}
-
-export const subscribeForStoreChanges = (subscriber: Function) => {
-  let captor: any;
-  const storeChangeTracker = ignoringFirstCall(() => subscriber(captor));
-  return cy.window()
-    .its('store')
-    .invoke('subscribe', (state: any) => {
-      captor = state;
-      storeChangeTracker.next();
-    });
-};
-
-export const expectNoStoreChanges = () => {
-  return subscribeForStoreChanges(() => {
-    throw 'Unexpected store change';
-  });
-};
-
 export const cyIds = {
   fields: {
     type: 'type-field',
@@ -48,3 +22,29 @@ export const fillNameInput = (value: string) => fillInput(cyIds.fields.name, val
 export const fillAmountInput = (value: number) => fillInput(cyIds.fields.amount, String(value));
 export const clickAddButton = () => cy.get(`[data-cy="${cyIds.buttons.add}"]`)
                                       .click();
+
+export const addItem = (type: string, name: string, amount: number) =>
+  cy.selectType(type)
+    .fillNameInput(name)
+    .fillAmountInput(amount)
+    .clickAddButton();
+
+export const deleteItem = (name: string) => cy.get(`[data-cy="delete-${name}"]`)
+                                              .click();
+
+const cardSelectorFor = (type: string) => `[data-cy="items-card-${type}"]`;
+
+export const assertItemsCard = (type: string, expectedRowElements: string[]) => {
+  const cardSelector = cardSelectorFor(type);
+  cy.get(cardSelector)
+    .should('exist')
+    .children('.mat-card-title')
+    .should('have.text', type);
+  return cy.get(cardSelector + ' .inventory-row div')
+           .each((element, index) => expect(element).to.have.text(expectedRowElements[index]));
+};
+
+export const assertItemsCardDoesNotExist = (type: string) => cy.get(cardSelectorFor(type))
+                                                               .should('not.exist');
+export const assertNoItemsCardExists = () => cy.get('[data-cy^="items-card-"')
+                                               .should('not.exist');

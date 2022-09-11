@@ -1,6 +1,6 @@
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {cyIds} from '../../../../cypress/support/commands';
-import {assertThat} from '../../../../cypress/support/static-commands';
-import {AppModule} from '../../app.module';
+import {InventoryModule} from '../../pages/inventory/inventory.module';
 import {ItemFormComponent} from './item-form.component';
 
 // for each on the test case level does not work with Cypress component testing as of now
@@ -8,9 +8,14 @@ import {ItemFormComponent} from './item-form.component';
 describe('Item form', () => {
 
   beforeEach(() => {
-    cy.mount(ItemFormComponent, {
+    cy.mount('<app-item-form (addItem)="addItem($event)"></app-item-form>', {
+      declarations: [ItemFormComponent],
+      componentProperties: {
+        addItem: cy.spy().as('addItemSpy')
+      },
       imports: [
-        AppModule
+        InventoryModule,
+        NoopAnimationsModule
       ],
     });
   });
@@ -31,32 +36,18 @@ describe('Item form', () => {
   describe('invalid input fallbacks', () => {
 
     it('focuses type field when add button clicked with empty inputs', () => {
-      cy.expectNoStoreChanges();
-
       cy.clickAddButton();
 
       cy.focused()
         .as('Focused element')
         .parents(`[data-cy="${cyIds.fields.type}"]`)
-        .should('exist');
+        .should('exist')
+        .get('@addItemSpy')
+        .should('not.have.been.called');
     });
 
     it('focuses name field when add button clicked after type filled in', () => {
-      cy.selectType('Grains')
-        .expectNoStoreChanges();
-
-      cy.clickAddButton();
-
-      cy.focused()
-        .as('Focused element')
-        .parents(`[data-cy="${cyIds.fields.name}"]`)
-        .should('exist');
-    });
-
-    it('focuses and resets name field when add button clicked with blank name input', () => {
-      cy.selectType('Grains')
-        .fillNameInput('   ')
-        .expectNoStoreChanges();
+      cy.selectType('Grains');
 
       cy.clickAddButton();
 
@@ -64,27 +55,43 @@ describe('Item form', () => {
         .as('Focused element')
         .parents(`[data-cy="${cyIds.fields.name}"]`)
         .should('exist')
-        .and('have.value', '');
+        .get('@addItemSpy')
+        .should('not.have.been.called');
+    });
+
+    it('focuses and resets name field when add button clicked with blank name input', () => {
+      cy.selectType('Grains')
+        .fillNameInput('   ');
+
+      cy.clickAddButton();
+
+      cy.focused()
+        .as('Focused element')
+        .parents(`[data-cy="${cyIds.fields.name}"]`)
+        .should('exist')
+        .and('have.value', '')
+        .get('@addItemSpy')
+        .should('not.have.been.called');
     });
 
     it('focuses amount field when add button clicked after type and name filled in', () => {
       cy.selectType('Grains')
-        .fillNameInput('Pale Ale')
-        .expectNoStoreChanges();
+        .fillNameInput('Pale Ale');
 
       cy.clickAddButton();
 
       cy.focused()
         .as('Focused element')
         .parents(`[data-cy="${cyIds.fields.amount}"]`)
-        .should('exist');
+        .should('exist')
+        .get('@addItemSpy')
+        .should('not.have.been.called');
     });
 
     it('focuses and resets amount field when add button clicked after type, name and negative amount filled in', () => {
       cy.selectType('Grains')
         .fillNameInput('Pale Ale')
-        .fillAmountInput(-1)
-        .expectNoStoreChanges();
+        .fillAmountInput(-1);
 
       cy.clickAddButton();
 
@@ -92,7 +99,9 @@ describe('Item form', () => {
         .as('Focused element')
         .parents(`[data-cy="${cyIds.fields.amount}"]`)
         .should('exist')
-        .and('have.value', '');
+        .and('have.value', '')
+        .get('@addItemSpy')
+        .should('not.have.been.called');
     });
 
   });
@@ -196,11 +205,7 @@ describe('Item form', () => {
 
     const addAndAssert = (inputs: Inputs, expectedItem: Item) => {
       const {type, name, amount, unit} = inputs;
-      cy.subscribeForStoreChanges((state: any) => {
-          assertThat(state.inventory[name])
-            .isEqualTo(expectedItem);
-        })
-        .selectType(type)
+      cy.selectType(type)
         .fillNameInput(name)
         .fillAmountInput(amount);
       if (unit) {
@@ -213,7 +218,9 @@ describe('Item form', () => {
         .as('Focused element')
         .parents(`[data-cy="${cyIds.fields.name}"]`)
         .should('exist')
-        .should('have.value', '');
+        .should('have.value', '')
+        .get('@addItemSpy')
+        .should('have.been.calledWithMatch', expectedItem);
     };
 
     it('adds single grains item with default unit', () => {

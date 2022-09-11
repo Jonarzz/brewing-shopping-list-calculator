@@ -1,2 +1,3 @@
-<app-item-form></app-item-form>
-<app-grouped-item-rows></app-grouped-item-rows>
+<app-item-form (addItem)="addItem($event)"></app-item-form>
+<app-grouped-item-rows [itemsByType]="itemsByType"
+                       (removeItem)="removeItem($event)"></app-grouped-item-rows>

@@ -14,7 +14,7 @@
         >{{item.amount}} {{item.unit}}</div>
         <button mat-icon-button
                 fxFlex.lt-md="10"
-                (click)="handleRemove(item)"
+                (click)="removeItem.emit(item)"
                 [attr.data-cy]="'delete-' + item.name">
           <mat-icon>delete</mat-icon>
         </button>

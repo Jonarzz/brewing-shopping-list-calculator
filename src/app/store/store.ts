@@ -11,7 +11,7 @@ export const STORE = {
 type InventoryState = typeof inventoryInitialState;
 const inventoryFeature = createFeatureSelector<InventoryState>(INVENTORY_KEY);
 
-export type ItemsByType = Record<InventoryItemType, InventoryItem[]>;
+export type ItemsByType = Partial<Record<InventoryItemType, InventoryItem[]>>;
 export const inventoryItemsByType = createSelector(inventoryFeature, (inventory: InventoryState) => {
   return Object.values(inventory)
                .reduce((mapped, item) => {
