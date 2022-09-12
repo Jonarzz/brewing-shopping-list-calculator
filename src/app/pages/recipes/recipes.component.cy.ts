@@ -3,6 +3,10 @@ import {RecipesComponent} from './recipes.component';
 
 describe('Recipes', () => {
 
+  before(() => {
+    localStorage.clear();
+  });
+
   beforeEach(() => {
     cy.mount(RecipesComponent, {
       imports: [

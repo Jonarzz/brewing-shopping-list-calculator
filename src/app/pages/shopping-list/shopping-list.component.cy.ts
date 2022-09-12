@@ -3,6 +3,10 @@ import {ShoppingListComponent} from './shopping-list.component';
 
 describe('Shopping list', () => {
 
+  before(() => {
+    localStorage.clear();
+  });
+
   beforeEach(() => {
     cy.mount(ShoppingListComponent, {
       imports: [

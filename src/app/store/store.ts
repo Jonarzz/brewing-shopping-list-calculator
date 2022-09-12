@@ -1,14 +1,18 @@
-import {createFeatureSelector, createSelector} from '@ngrx/store';
+import {ActionReducer, createFeatureSelector, createSelector} from '@ngrx/store';
+import {localStorageSync} from 'ngrx-store-localstorage';
 import {InventoryItem, InventoryItemType} from '../model';
-import {initialState as inventoryInitialState, inventoryReducer} from './inventory.reducer';
-import {initialState as recipesInitialState, recipesReducer} from './recipes.reducer';
+import {initialState as inventoryInitialState, INVENTORY_KEY, inventoryReducer} from './inventory.reducer';
+import {initialState as recipesInitialState, RECIPES_KEY, recipesReducer} from './recipes.reducer';
 
-const INVENTORY_KEY = 'inventory';
-const RECIPES_KEY = 'recipes';
-
-export const STORE = {
+export const REDUCERS = {
   [INVENTORY_KEY]: inventoryReducer,
   [RECIPES_KEY]: recipesReducer,
+};
+
+const localStorageSyncReducer = (reducer: ActionReducer<any>): ActionReducer<any> =>
+  localStorageSync({keys: Object.keys(REDUCERS)})(reducer);
+export const STORE_CONFIG = {
+  metaReducers: [localStorageSyncReducer]
 };
 
 export type ItemByName = Record<string, InventoryItem>;
@@ -41,7 +45,7 @@ export const recipesWithGroupedItems =
   createSelector(recipesFeature, (recipes: RecipesState) => {
     return Object.entries(recipes)
                  .reduce((mapped, [recipeName, recipe]) => {
-                   mapped[recipeName] = groupItemsByType(recipe.itemByName);
+                   mapped[recipeName] = groupItemsByType(recipe);
                    return mapped;
                  }, <ItemsByRecipeName>{});
   });
@@ -49,7 +53,7 @@ export const recipesWithGroupedItems =
 export const atLeastOneRecipeItemExists =
   createSelector(recipesFeature, (recipes: RecipesState) => {
     return Object.values(recipes)
-                 .filter(recipe => Object.keys(recipe.itemByName).length > 0)
+                 .filter(recipe => Object.keys(recipe).length > 0)
                  .length > 0;
 
   });

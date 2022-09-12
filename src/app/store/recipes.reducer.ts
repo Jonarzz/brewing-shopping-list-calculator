@@ -1,12 +1,21 @@
 import {createReducer, on} from '@ngrx/store';
+import {InventoryItem} from '../model';
 import {addRecipe, addRecipeItem, removeRecipe, removeRecipeItem} from './recipes.actions';
-import {ItemByName} from './store';
+import {ItemByName, ItemsByRecipeName} from './store';
 
-export interface RecipeState {
-  itemByName: ItemByName
-}
+export const RECIPES_KEY = 'recipes';
 
-export const initialState: Record<string, RecipeState> = {};
+export const initialState: Record<string, ItemByName> =
+  Object.entries(JSON.parse(localStorage.getItem(RECIPES_KEY) || '{}'))
+        .reduce((all, [recipeName, itemByName]) => {
+          all[recipeName] = Object.entries(<ItemsByRecipeName>itemByName)
+                                  .reduce((grouped, [itemName, item]) => {
+                                    const invItem = <InventoryItem>item;
+                                    grouped[itemName] = new InventoryItem(invItem.type, invItem.name, invItem.amount, invItem.unit);
+                                    return grouped;
+                                  }, <ItemByName>{});
+          return all;
+        }, <Record<string, ItemByName>>{});
 
 export const recipesReducer = createReducer(
   initialState,
@@ -16,9 +25,7 @@ export const recipesReducer = createReducer(
     }
     return {
       ...state,
-      [recipeName]: {
-        itemByName: {}
-      }
+      [recipeName]: {},
     };
   }),
   on(addRecipeItem, (state, {recipeName, item}) => {
@@ -27,16 +34,14 @@ export const recipesReducer = createReducer(
       return state;
     }
     const itemName = item.name;
-    const matchingItem = recipe.itemByName[itemName];
+    const matchingItem = recipe[itemName];
     let itemToAdd = item;
     if (matchingItem) {
       itemToAdd = matchingItem.mergedWith(item);
     }
     const newRecipe = {
-      itemByName: {
-        ...recipe.itemByName,
-        [itemName]: itemToAdd
-      },
+      ...recipe,
+      [itemName]: itemToAdd,
     };
     return {
       ...state,
@@ -48,14 +53,11 @@ export const recipesReducer = createReducer(
     if (!recipe) {
       return state;
     }
-    const itemByName = {...recipe.itemByName};
-    delete itemByName[item.name]
-    const newRecipe = {
-      itemByName
-    };
+    const itemByName = {...recipe};
+    delete itemByName[item.name];
     return {
       ...state,
-      [recipeName]: newRecipe,
+      [recipeName]: itemByName,
     };
   }),
   on(removeRecipe, (state, {recipeName}) => {

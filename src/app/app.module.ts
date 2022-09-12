@@ -8,7 +8,7 @@ import {AppComponent} from './app.component';
 import {InventoryModule} from './pages/inventory/inventory.module';
 import {RecipesModule} from './pages/recipes/recipes.module';
 import {ShoppingListModule} from './pages/shopping-list/shopping-list.module';
-import {STORE} from './store/store';
+import {REDUCERS, STORE_CONFIG} from './store/store';
 
 @NgModule({
   declarations: [
@@ -21,7 +21,7 @@ import {STORE} from './store/store';
     BrowserModule,
     BrowserAnimationsModule,
     MatTabsModule,
-    StoreModule.forRoot(STORE, {}),
+    StoreModule.forRoot(REDUCERS, STORE_CONFIG),
     MatTooltipModule,
   ],
   providers: [],

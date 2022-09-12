@@ -3,6 +3,10 @@ import {InventoryComponent} from './inventory.component';
 
 describe('Inventory', () => {
 
+  before(() => {
+    localStorage.clear();
+  });
+
   beforeEach(() => {
     cy.mount(InventoryComponent, {
       imports: [
