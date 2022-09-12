@@ -28,6 +28,9 @@ export const defaultUnitForType = Object.entries(availableUnitsForType)
 const _recalculateUnits = (amount: number,
                            sourceUnit: InventoryItemUnit,
                            targetUnit: InventoryItemUnit): number => {
+  if (sourceUnit === targetUnit) {
+    return amount;
+  }
   switch (sourceUnit) {
     case InventoryItemUnit.GRAM:
       if (targetUnit === InventoryItemUnit.KILOGRAM) {
