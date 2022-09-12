@@ -11,15 +11,14 @@ export class GroupedItemRows implements OnInit {
 
   @Input()
   itemsByType!: ItemsByType;
+  @Input()
+  showDeleteButton = true;
   @Output()
   removeItem = new EventEmitter<InventoryItem>();
 
   ngOnInit(): void {
     if (!this.itemsByType) {
       throw new Error('"itemsByType" input is required');
-    }
-    if (!this.removeItem) {
-      throw new Error('"removeItem" output is required');
     }
   }
 

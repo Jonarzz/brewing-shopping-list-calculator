@@ -78,4 +78,10 @@ export class InventoryItem {
     const sum = (+this.amount) + (+recalculated);
     return new InventoryItem(this.type, this.name, sum, this.unit);
   };
+
+  diffItem = (other: InventoryItem) => {
+    const recalculated = _recalculateUnits(other.amount, other.unit, this.unit);
+    const difference = this.amount - recalculated;
+    return new InventoryItem(this.type, this.name, difference, this.unit);
+  };
 }

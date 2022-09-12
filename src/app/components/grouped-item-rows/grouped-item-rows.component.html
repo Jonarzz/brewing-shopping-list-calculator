@@ -13,6 +13,7 @@
              fxFlex.lt-md="30"
         >{{item.amount}} {{item.unit}}</div>
         <button mat-icon-button
+                *ngIf="showDeleteButton"
                 fxFlex.lt-md="10"
                 (click)="removeItem.emit(item)"
                 [attr.data-cy]="'delete-' + item.name">
