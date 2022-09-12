@@ -45,3 +45,11 @@ export const recipesWithGroupedItems =
                    return mapped;
                  }, <ItemsByRecipeName>{});
   });
+
+export const atLeastOneRecipeItemExists =
+  createSelector(recipesFeature, (recipes: RecipesState) => {
+    return Object.values(recipes)
+                 .filter(recipe => Object.keys(recipe.itemByName).length > 0)
+                 .length > 0;
+
+  });

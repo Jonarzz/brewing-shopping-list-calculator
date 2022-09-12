@@ -9,12 +9,11 @@
       <app-recipes></app-recipes>
     </mat-tab>
 
-    <mat-tab [disabled]="true">
+    <mat-tab [disabled]="shoppingListDisabled">
       <ng-template mat-tab-label>
-        <label [matTooltip]="true ? 'Add at least one recipe' : ''"
-               [style.cursor]="true ? 'not-allowed' : 'pointer'">
-          Shopping list
-        </label>
+        <label [matTooltip]="shoppingListDisabled ? 'Add at least one recipe with an item' : ''"
+               [style.cursor]="shoppingListDisabled ? 'not-allowed' : 'pointer'"
+        >Shopping list</label>
       </ng-template>
       <app-shopping-list></app-shopping-list>
     </mat-tab>

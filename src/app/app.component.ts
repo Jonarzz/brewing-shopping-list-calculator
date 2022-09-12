@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {atLeastOneRecipeItemExists} from './store/store';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +8,12 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'brewing-shopping-list-calculator';
+
+  shoppingListDisabled = true;
+
+  constructor(store: Store) {
+    store.select(atLeastOneRecipeItemExists)
+         .subscribe(value => this.shoppingListDisabled = !value);
+  }
+
 }
