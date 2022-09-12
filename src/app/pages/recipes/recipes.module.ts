@@ -5,6 +5,7 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCardModule} from '@angular/material/card';
 import {MatExpansionModule} from '@angular/material/expansion';
+import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
 import {ComponentsModule} from '../../components/components.module';
 import {RecipesComponent} from './recipes.component';
@@ -25,6 +26,7 @@ import {RecipesComponent} from './recipes.component';
     MatInputModule,
     ReactiveFormsModule,
     MatExpansionModule,
+    MatIconModule,
   ],
 })
 export class RecipesModule { }

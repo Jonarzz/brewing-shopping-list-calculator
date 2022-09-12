@@ -39,7 +39,6 @@ export const inventoryItemsByType =
 
 export const recipesWithGroupedItems =
   createSelector(recipesFeature, (recipes: RecipesState) => {
-    console.log(recipes);
     return Object.entries(recipes)
                  .reduce((mapped, [recipeName, recipe]) => {
                    mapped[recipeName] = groupItemsByType(recipe.itemByName);

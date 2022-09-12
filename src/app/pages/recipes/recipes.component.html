@@ -2,13 +2,14 @@
           data-cy="form-card">
   <mat-card-content fxLayout="row wrap"
                     fxLayoutGap="8px grid"
-                    fxFlexFill>
+                    fxFlexFill
+                    (keydown.enter)="addRecipe()">
 
     <mat-form-field appearance="fill"
                     fxFlex="30"
                     fxFlex.lt-md="70"
                     [hideRequiredMarker]="true"
-                    data-cy="name-field">
+                    data-cy="recipe-name-field">
       <mat-label>Recipe name</mat-label>
       <input matInput required
              id="recipe-name-input"
@@ -20,20 +21,30 @@
             fxFlex="10"
             fxFlex.lt-md="30"
             (click)="addRecipe()"
-            data-cy="add-button"
+            data-cy="add-recipe-button"
     >Add</button>
 
   </mat-card-content>
 </mat-card>
 
 <mat-expansion-panel *ngFor="let recipe of recipes | keyvalue"
+                     [expanded]="expandedRecipes.has(recipe.key)"
+                     (afterExpand)="expandedRecipes.add(recipe.key)"
+                     (afterCollapse)="expandedRecipes.delete(recipe.key)"
                      [attr.data-cy]="'recipe-card-' + recipe.key">
   <mat-expansion-panel-header>
     <mat-panel-title>
-      {{recipe.key}}
+      <span>{{recipe.key}}</span>
+      <button mat-icon-button
+              style="margin-left: 10px"
+              (click)="removeRecipe(recipe.key)"
+              [attr.data-cy]="'delete-' + recipe.key">
+        <mat-icon>delete</mat-icon>
+      </button>
     </mat-panel-title>
   </mat-expansion-panel-header>
-  <app-item-form (addItem)="addRecipeItem(recipe.key, $event)"></app-item-form>
+  <app-item-form (addItem)="addRecipeItem(recipe.key, $event)"
+                 [initialValues]="lastSavedItem ? lastSavedItem : undefined"></app-item-form>
   <app-grouped-item-rows [itemsByType]="recipe.value"
                          (removeItem)="removeRecipeItem(recipe.key, $event)"></app-grouped-item-rows>
 </mat-expansion-panel>

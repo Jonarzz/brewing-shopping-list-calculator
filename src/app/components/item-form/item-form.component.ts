@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
 import {MatButton} from '@angular/material/button';
 import {availableUnitsForType, defaultUnitForType, InventoryItem, InventoryItemType, InventoryItemUnit} from '../../model';
@@ -10,6 +10,8 @@ import {availableUnitsForType, defaultUnitForType, InventoryItem, InventoryItemT
 })
 export class ItemFormComponent implements OnInit {
 
+  @Input()
+  initialValues?: { type: InventoryItemType, unit: InventoryItemUnit };
   @Output()
   private addItem = new EventEmitter<InventoryItem>();
 
@@ -30,6 +32,12 @@ export class ItemFormComponent implements OnInit {
   ngOnInit(): void {
     if (!this.addItem) {
       throw new Error('"addItem" output is required');
+    }
+    if (this.initialValues) {
+      const {type, unit} = this.initialValues;
+      this.type.setValue(type);
+      this.unit.setValue(unit);
+      this.handleTypeSelection();
     }
   }
 
