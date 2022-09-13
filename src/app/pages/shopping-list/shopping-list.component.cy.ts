@@ -68,4 +68,31 @@ describe('Shopping list', () => {
       .assertItemsCardDoesNotExist('Misc');
   });
 
+  it('displays an info message if all items required for the recipes are in the inventory', () => {
+
+    const initialState = {
+      inventory: {
+        'Pale Ale': InventoryItem.grain('Pale Ale', 7),
+        'Citra': InventoryItem.hop('Citra', 250),
+        'US-05': InventoryItem.yeast('US-05', 2),
+      },
+      recipes: {
+        'Recipe': {
+          'Pale Ale': InventoryItem.grain('Pale Ale', 5),
+          'Citra': InventoryItem.hop('Citra', 250),
+          'US-05': InventoryItem.yeast('US-05', 1),
+        },
+      },
+    };
+
+    mount(initialState);
+
+    cy.get('.mat-card')
+      .should('contain.text', 'You have all items you need to brew your recipes!')
+      .assertItemsCardDoesNotExist('Grains')
+      .assertItemsCardDoesNotExist('Hops')
+      .assertItemsCardDoesNotExist('Yeast')
+      .assertItemsCardDoesNotExist('Misc');
+  });
+
 });

@@ -1,2 +1,7 @@
+<mat-card *ngIf="(shoppingList | keyvalue).length === 0; else rows">
+  <mat-card-content>You have all items you need to brew your recipes!</mat-card-content>
+</mat-card>
+<ng-template #rows>
 <app-grouped-item-rows [itemsByType]="shoppingList"
                        [showDeleteButton]="false"></app-grouped-item-rows>
+</ng-template>

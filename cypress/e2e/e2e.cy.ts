@@ -46,7 +46,7 @@ describe('Full page tests', () => {
       .assertItemsCardDoesNotExist('Misc');
   });
 
-  it('displays empty shopping list when inventory contains everything that\'s required', () => {
+  it('displays info message when inventory contains everything that\'s required', () => {
     cy.visit('/');
 
     cy.addItem('Grains', 'Pale Ale', 3)
@@ -56,6 +56,8 @@ describe('Full page tests', () => {
       .get('.mat-tab-label')
       .contains('Shopping list')
       .click()
+      .get('.mat-card')
+      .should('contain.text', 'You have all items you need to brew your recipes!')
       .assertItemsCardDoesNotExist('Grains')
       .assertItemsCardDoesNotExist('Hops')
       .assertItemsCardDoesNotExist('Yeast')
