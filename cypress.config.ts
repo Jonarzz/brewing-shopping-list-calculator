@@ -3,7 +3,8 @@ import {defineConfig} from 'cypress';
 export default defineConfig({
   
   e2e: {
-    'baseUrl': 'http://localhost:4200'
+    'baseUrl': 'http://localhost:4200',
+    video: false
   },
   
   component: {
@@ -11,7 +12,8 @@ export default defineConfig({
       framework: 'angular',
       bundler: 'webpack',
     },
-    specPattern: '**/*.cy.ts'
+    specPattern: '**/*.cy.ts',
+    video: false
   }
   
 })
