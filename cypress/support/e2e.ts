@@ -1,17 +1,18 @@
-// ***********************************************************
-// This example support/e2e.ts is processed and
-// loaded automatically before your test files.
-//
-// This is a great place to put global configuration and
-// behavior that modifies Cypress.
-//
-// You can change the location of this file or turn off
-// automatically serving support files with the
-// 'supportFile' configuration option.
-//
-// You can read more here:
-// https://on.cypress.io/configuration
-// ***********************************************************
+import './commands';
+import {addItem, assertItemsCard, assertItemsCardDoesNotExist, deleteItem} from './commands';
 
-// When a command from ./commands is ready to use, import with `import './commands'` syntax
-// import './commands';
+declare global {
+  namespace Cypress {
+    interface Chainable {
+      addItem: typeof addItem,
+      deleteItem: typeof deleteItem,
+      assertItemsCard: typeof assertItemsCard,
+      assertItemsCardDoesNotExist: typeof assertItemsCardDoesNotExist,
+    }
+  }
+}
+
+Cypress.Commands.add('addItem', addItem);
+Cypress.Commands.add('deleteItem', deleteItem);
+Cypress.Commands.add('assertItemsCard', assertItemsCard);
+Cypress.Commands.add('assertItemsCardDoesNotExist', assertItemsCardDoesNotExist);

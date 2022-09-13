@@ -4,7 +4,7 @@ import {InventoryComponent} from './inventory.component';
 describe('Inventory', () => {
 
   before(() => {
-    localStorage.clear();
+    cy.clearLocalStorage();
   });
 
   beforeEach(() => {

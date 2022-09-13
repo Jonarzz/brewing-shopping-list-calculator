@@ -102,7 +102,7 @@
           "options": {
             "testingType": "component",
             "watch": false,
-            "headless": false
+            "headless": true
           },
           "configurations": {
             "development": {
@@ -114,8 +114,8 @@
           "builder": "@cypress/schematic:cypress",
           "options": {
             "devServerTarget": "brewing-shopping-list-calculator:serve",
-            "watch": true,
-            "headless": false
+            "watch": false,
+            "headless": true
           },
           "configurations": {
             "production": {

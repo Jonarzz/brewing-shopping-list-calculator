@@ -4,7 +4,7 @@ import {RecipesComponent} from './recipes.component';
 describe('Recipes', () => {
 
   before(() => {
-    localStorage.clear();
+    cy.clearLocalStorage();
   });
 
   beforeEach(() => {

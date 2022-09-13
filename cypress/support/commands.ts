@@ -1,3 +1,5 @@
+import 'cypress-localstorage-commands';
+
 export const cyIds = {
   fields: {
     type: 'type-field',
@@ -23,11 +25,13 @@ export const fillAmountInput = (value: number) => fillInput(cyIds.fields.amount,
 export const clickAddButton = () => cy.get(`[data-cy="${cyIds.buttons.add}"]`)
                                       .click();
 
-export const addItem = (type: string, name: string, amount: number) =>
-  cy.selectType(type)
-    .fillNameInput(name)
-    .fillAmountInput(amount)
-    .clickAddButton();
+export const addItem = (type: string, name: string, amount: number) => {
+  selectType(type);
+  fillNameInput(name);
+  fillAmountInput(amount);
+  clickAddButton();
+  return cy;
+};
 
 export const deleteItem = (name: string) => cy.get(`[data-cy="delete-${name}"]`)
                                               .click();

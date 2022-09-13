@@ -36,7 +36,6 @@ export class RecipesComponent {
   addRecipe() {
     const {value} = this.recipeName;
     if (value) {
-      // TODO zwija karte przepisu po dodaniu
       this.store.dispatch(addRecipe({recipeName: value}));
       this.recipeName.reset();
       this.expandedRecipes = new Set([value]);
