@@ -1,7 +1,5 @@
 describe('Full page tests', () => {
 
-  // TODO https://github.com/meinaart/cypress-plugin-snapshots
-
   before(() => {
     cy.clearLocalStorage();
     cy.clearLocalStorageSnapshot();

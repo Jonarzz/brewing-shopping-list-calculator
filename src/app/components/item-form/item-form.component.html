@@ -33,10 +33,15 @@
                     class="no-right-padding-sm--enforced"
                     data-cy="name-field">
       <mat-label>Name</mat-label>
-      <!-- TODO autocomplete from store -->
       <input matInput required
              id="name-input"
-             [formControl]="name">
+             [formControl]="name"
+             [matAutocomplete]="auto">
+      <mat-autocomplete #auto="matAutocomplete">
+        <mat-option *ngFor="let name of knownNames"
+                    [value]="name"
+        >{{name}}</mat-option>
+      </mat-autocomplete>
     </mat-form-field>
 
     <mat-form-field appearance="fill"

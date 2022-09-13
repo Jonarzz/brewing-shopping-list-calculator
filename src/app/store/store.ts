@@ -57,3 +57,18 @@ export const atLeastOneRecipeItemExists =
                  .length > 0;
 
   });
+
+export const itemNames =
+  createSelector(
+    inventoryFeature,
+    recipesFeature,
+    (inventory: InventoryState, recipes: RecipesState) => {
+      return new Set<string>(
+        [
+          ...Object.keys(inventory),
+          ...Object.values(recipes)
+                   .flatMap(itemByName => Object.keys(itemByName)),
+        ]
+      );
+    }
+  );

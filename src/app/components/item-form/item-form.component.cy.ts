@@ -1,5 +1,7 @@
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {provideMockStore} from '@ngrx/store/testing';
 import {cyIds} from '../../../../cypress/support/commands';
+import {InventoryItem} from '../../model';
 import {InventoryModule} from '../../pages/inventory/inventory.module';
 import {ItemFormComponent} from './item-form.component';
 
@@ -7,20 +9,28 @@ import {ItemFormComponent} from './item-form.component';
 // hence for each loops are used in the test cases
 describe('Item form', () => {
 
-  beforeEach(() => {
+  const mount = (initialState = {
+    recipes: {},
+    inventory: {}
+  }) => {
     cy.mount('<app-item-form (addItem)="addItem($event)"></app-item-form>', {
       declarations: [ItemFormComponent],
       componentProperties: {
-        addItem: cy.spy().as('addItemSpy')
+        addItem: cy.spy().as('addItemSpy'),
       },
       imports: [
         InventoryModule,
-        NoopAnimationsModule
+        NoopAnimationsModule,
+      ],
+      providers: [
+        provideMockStore({ initialState }),
       ],
     });
-  });
+  };
 
   it('renders form elements with appropriate text', () => {
+    mount();
+
     for (let [cyId, expectedText] of [
       [cyIds.fields.type, 'Type'],
       [cyIds.fields.name, 'Name'],
@@ -34,6 +44,10 @@ describe('Item form', () => {
   });
 
   describe('invalid input fallbacks', () => {
+
+    beforeEach(() => {
+      mount();
+    });
 
     it('focuses type field when add button clicked with empty inputs', () => {
       cy.clickAddButton();
@@ -107,6 +121,10 @@ describe('Item form', () => {
   });
 
   describe('units and types', () => {
+
+    beforeEach(() => {
+      mount();
+    });
 
     it('changes default unit on type selection', () => {
       for (let [type, expectedUnit] of [
@@ -223,6 +241,10 @@ describe('Item form', () => {
         .should('have.been.calledWithMatch', expectedItem);
     };
 
+    beforeEach(() => {
+      mount();
+    });
+
     it('adds single grains item with default unit', () => {
       const type = 'Grains';
       const name = 'Pale Ale';
@@ -304,5 +326,35 @@ describe('Item form', () => {
     });
 
   });
+
+  describe('name autocomplete', () => {
+
+    it('displays autocompelte based on inventory and recipes state', () => {
+      mount({
+        inventory: {
+          'Pale Ale': InventoryItem.grain('Pale Ale', 5),
+          'Mosaic': InventoryItem.grain('Mosaic', 100),
+          'Citra': InventoryItem.grain('Citra', 200)
+        },
+        recipes: {
+          'First recipe': {
+            'Pale Ale': InventoryItem.grain('Pale Ale', 10),
+            'Carafa Special III': InventoryItem.grain('Carafa Special III', 1),
+            'Citra': InventoryItem.grain('Citra', 200),
+            'Cascade': InventoryItem.grain('Cascade', 100),
+            'US-05': InventoryItem.grain('US-05', 2)
+          }
+        }
+      });
+
+      const expectedAutocompleteOptions = ['Carafa Special III', 'Cascade', 'Citra', 'Mosaic', 'Pale Ale', 'US-05'];
+      cy.get(`[data-cy="${cyIds.fields.name}"]`)
+        .click()
+        .get('.mat-autocomplete-panel .mat-option')
+        .each((option, index) => expect(option).to.have.text(expectedAutocompleteOptions[index]));
+    });
+
+  });
+
 
 });

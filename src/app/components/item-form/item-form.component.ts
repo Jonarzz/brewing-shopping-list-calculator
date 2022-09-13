@@ -1,7 +1,9 @@
 import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
 import {MatButton} from '@angular/material/button';
+import {Store} from '@ngrx/store';
 import {availableUnitsForType, defaultUnitForType, InventoryItem, InventoryItemType, InventoryItemUnit} from '../../model';
+import {itemNames} from '../../store/store';
 
 @Component({
   selector: 'app-item-form',
@@ -19,6 +21,8 @@ export class ItemFormComponent implements OnInit {
 
   availableUnits = Object.values(InventoryItemUnit);
 
+  knownNames: string[] = [];
+
   type = new FormControl<InventoryItemType>(<any>null, [Validators.required]);
   name = new FormControl('', [Validators.required]);
   amount = new FormControl<number>(<any>null, [Validators.required]);
@@ -28,6 +32,11 @@ export class ItemFormComponent implements OnInit {
   addButton!: MatButton;
 
   private unitSetManually = false;
+
+  constructor(store: Store) {
+    store.select(itemNames)
+         .subscribe(value => this.knownNames = Array.from(value).sort());
+  }
 
   ngOnInit(): void {
     if (!this.addItem) {
