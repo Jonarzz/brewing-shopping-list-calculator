@@ -1,5 +1,7 @@
 # Brewing shopping list calculator
 
+![Node.js CI badge](https://github.com/Jonarzz/brewing-shopping-list-calculator/actions/workflows/node.js.yml/badge.svg)
+
 ![inventory](screenshots/inventory.png)
 ![recipes](screenshots/recipes.png)
 ![shopping list](screenshots/shopping-list.png)
